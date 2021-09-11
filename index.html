@@ -12,35 +12,71 @@
 
 <body class="bg-light">
 
-  <div class="container-lg py-5">
+  <div class="container-lg">
 
-    <h1 class="text-center bg-dark p-4 text-white rounded mb-5">Contact book</h1>
-    <div class="box row justify-content-center">
-      <div class="col-lg-5 me-4">
+    <header class="py-4 mb-3">
+      <h1 class="display-5 mb-0 text-center text-white py-3 bg-dark fw-bold">Contact book</h1>
+    </header>
 
-        <h2 class="h3 mb-4">New contact form</h2>
 
-        <form class="js-form" action="https://echo.htmlacademy.ru" method="GET">
-          <input class="js-input-name form-control col-lg-4 d-block mb-2" type="text" placeholder="name" required autofocus>
-          <input class="js-input-info form-control col-lg-4 d-block mb-2" type="text" placeholder="relationship" required>
-          <input class="js-input-phone form-control col-lg-4 d-block mb-2" type="tel" placeholder="phone" required>
+    <div class="row justify-content-center">
+      <section class="col-md-5">
+        <h2 class="mb-3">New contact</h2>
 
-          <button class="js-submit btn btn-primary form-control col-lg-4" type="submit">Submit</button>
+        <form class="js-new-contact-form" action="https://echo.htmlacademy.ru" method="POST">
+          <div class="mb-3">
+            <input class="form-control js-new-contact-name-input" type="text" name="name" placeholder="Name"
+              aria-label="Name" required>
+          </div>
+          <div class="mb-3">
+            <input class="form-control js-new-contact-relationship-input" type="text" list="relationship-list"
+              name="relationship" placeholder="Relationship" aria-label="Relationship" required>
+
+            <datalist id="relationship-list">
+              <option>Family</option>
+              <option>Friend</option>
+              <option>Colleague</option>
+              <option>Coursemate</option>
+              <option>Classmate</option>
+              <option>Apprentice</option>
+            </datalist>
+          </div>
+
+          <div class="mb-3">
+            <input class="form-control js-new-contact-phone-input" type="tel" name="phone" placeholder="Phone"
+              aria-label="Phone" required>
+            <span class="js-warning-text text-danger d-none">Contact already exists</span>
+          </div>
+
+          <!-- Relationship -->
+          <!-- Telefon -->
+          <button class="btn btn-primary">Add contact</button>
         </form>
-      </div>
+      </section>
 
-      <div class="col-lg-5">
+      <section class="contacts col-md-5">
+        <h2 class="mb-3">Contacts</h2>
 
-        <h2 class="h3 mb-4">Contacts</h2>
-
-        <ul class="js-list-group list-unstyled">
+        <ul class="contacts__list list-group">
         </ul>
-
-      </div>
+      </section>
     </div>
 
-
   </div>
+
+
+  <template id="contact-list-item-template">
+    <li class="contact list-group-item p-3 d-flex flex-column align-items-start">
+      <h3 class="contact__name h5"></h3>
+      <div class="contact__relationship mb-2">.</div>
+      <div class="buttons d-flex align-items-center">
+        <a class="contact__phone-link btn btn-outline-success btn-sm me-3" href=""></a>
+        <button class="js-clear__button btn btn-outline-danger btn-sm" type="button">Clear contact</button>
+      </div>
+
+    </li>
+  </template>
+
 
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>

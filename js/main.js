@@ -1,48 +1,85 @@
-var elForm = document.querySelector('.js-form');
-var elFormName = elForm.querySelector('.js-input-name');
-var elFormInfo = elForm.querySelector('.js-input-info');
-var elFormPhone = elForm.querySelector('.js-input-phone');
-var elFormBtn = elForm.querySelector('.js-input-button');
-var elJsListGroup = document.querySelector('.js-list-group');
-
-var infoHolderArr = [];
+// Kontaktlarni joylash uchun bo'sh array ochamiz
+var contacts = [];
 
 
-elForm.addEventListener('submit', function (e) {
-  e.preventDefault();
+// DOM
+var elNewContactForm = document.querySelector('.js-new-contact-form');
+var elNewContactNameInput = elNewContactForm.querySelector('.js-new-contact-name-input');
+var elNewContactRelationshipInput = elNewContactForm.querySelector('.js-new-contact-relationship-input');
+var elNewContactPhoneInput = elNewContactForm.querySelector('.js-new-contact-phone-input');
 
-  // btn
-  var elJsBtn = elForm.querySelector('.js-submit');
-  // creating
-  var contactList = document.createElement('li');
-  var contactName = document.createElement('h3');
-  var contactInfo = document.createElement('p');
-  var contactPhone = document.createElement('a');
+var elContacts = document.querySelector('.contacts');
+var elContactsList = elContacts.querySelector('.contacts__list');
+var elWarningPhone = document.querySelector('.js-warning-text');
+var elClearContactButton = document.querySelector('.js-clear__button');
 
-  // object
-  var contact = {
-    name: elFormName.value,
-    reletionship: elFormName.value,
-    phonenumber: elFormName.value,
-  };
 
-  contactName.textContent = elFormName.value;
-  contactInfo.textContent = elFormInfo.value;
-  contactPhone.textContent = elFormPhone.value;
 
-  elFormName.value = '';
-  elFormInfo.value = '';
-  elFormPhone.value = '';
+function addContact() {
+  contacts.push({
+    name: elNewContactNameInput.value.trim(),
+    relationship: elNewContactRelationshipInput.value.trim(),
+    phone: elNewContactPhoneInput.value.trim(),
+  });
+}
 
-  contactList.appendChild(contactName);
-  contactList.appendChild(contactInfo);
-  contactList.appendChild(contactPhone);
 
-  contactList.classList.add('bg-white', 'p-2', 'border', 'mb-5', 'rounded');
-  contactPhone.classList.add('text-decoration-none');
-  contactPhone.href = 'tel: ${contact[i].phonenumber}';
+var elContactListItemTemplate = document.querySelector('#contact-list-item-template').content;
+function showContacts () {
+  elContactsList.innerHTML = '';
+  var elContactsFragment = document.createDocumentFragment();
 
-  elJsListGroup.appendChild(contactList);
-  infoHolderArr.push(contact);
-});
+  for (var contact of contacts) {
+    var elNewContactsItem = elContactListItemTemplate.cloneNode(true);
 
+    elNewContactsItem.querySelector('.contact__name').textContent = contact.name;
+    elNewContactsItem.querySelector('.contact__relationship').textContent = contact.relationship;
+    elNewContactsItem.querySelector('.contact__phone-link').textContent = contact.phone;
+    elNewContactsItem.querySelector('.contact__phone-link').href = `tel:${contact.phone}`;
+
+    elContactsFragment.appendChild(elNewContactsItem);
+  }
+
+  elContactsList.appendChild(elContactsFragment);
+}
+
+
+// Form bo'lsa
+if (elNewContactForm) {
+  elNewContactForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    var phoneIndex = contacts.findIndex(function(contact){
+      return contact.phone === elNewContactPhoneInput.value.trim();
+    });
+
+    if (phoneIndex > -1){
+      elNewContactPhoneInput.classList.add('is-invalid');
+      elWarningPhone.classList.remove('d-none');
+      return;
+    }else {
+      elNewContactPhoneInput.classList.remove('is-invalid');
+      elWarningPhone.classList.add('d-none');
+    }
+    addContact();
+    // Add contact to contacts array
+
+
+    // Reset inputs
+    elNewContactNameInput.value = '';
+    elNewContactRelationshipInput.value = '';
+    elNewContactPhoneInput.value = '';
+
+    showContacts();
+
+  });
+}
+
+    // showContacts funksiyasi yordamida HTMLda kontaktlarni ko'rsatamiz
+    elContactsList.addEventListener('click', (evn) => {
+      if (evn.target.matches('.js-clear__button')) {
+        contactIndex = contacts.findIndex(contact => evn.target.closest('.contact').dataset.id === contact.phone);
+        contacts.splice(contactIndex, 1);
+        showContacts();
+      }
+    });
